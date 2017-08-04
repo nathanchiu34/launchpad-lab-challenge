@@ -26,9 +26,9 @@
 		return fetch(url).then((resp) => {
 			return resp.json();
 		}).then((data) => {
-			document.getElementById(elementId).innerHTML += data.watchers + ' followers' + '<br/>';
-			document.getElementById(elementId).innerHTML += data.open_issues + ' issues' + '<br/>';
-			document.getElementById(elementId).innerHTML += 'Network count: ' + data.network_count + '<br/>';
+			document.getElementById(elementId).innerHTML += data.watchers.toLocaleString() + ' followers' + '<br/>';
+			document.getElementById(elementId).innerHTML += data.open_issues.toLocaleString() + ' issues' + '<br/>';
+			document.getElementById(elementId).innerHTML += 'Network count: ' + data.network_count.toLocaleString() + '<br/>';
 		});
 	}
 
