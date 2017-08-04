@@ -14,34 +14,46 @@
 	<h1>Client-Side JS Libraries</h1>
 	<p id='date'> The time is </p>
 	<h2> React.js </h2>
-	<p id='react-data'> React stats: <br/></p>
+	<p id='React-data'></p>
 	<h2> Angular.js </h2>
-	<p id='angular-data'> Angular stats: <br/></p>
+	<p id='Angular-data'></p>
 	<h2> Ember.js </h2>
-	<p id='ember-data'> Ember stats: <br/></p>
+	<p id='Ember-data'></p>
+	<h2> Vue.js </h2>
+	<p id='Vue-data'></p>
 </div>
 
 <script>
-	function setDataHTML(url, elementId) {
+	function getDataHTML(url, elementId) {
 		return fetch(url).then((resp) => {
 			return resp.json();
 		}).then((data) => {
+			elementTitle = elementId.split('-')[0]
+			document.getElementById(elementId).innerHTML = elementTitle + ' stats: </br>';
 			document.getElementById(elementId).innerHTML += data.watchers.toLocaleString() + ' followers' + '<br/>';
 			document.getElementById(elementId).innerHTML += data.open_issues.toLocaleString() + ' issues' + '<br/>';
 			document.getElementById(elementId).innerHTML += 'Network count: ' + data.network_count.toLocaleString() + '<br/>';
 		});
-	}
+	};
 
 	var now = new Date();
 	document.getElementById('date').innerHTML += now;
 
-	let headers = new Headers();
-
 	let promises = [];
-	promises.push(setDataHTML('https://api.github.com/repos/facebook/react', 'react-data'));
-	promises.push(setDataHTML('https://api.github.com/repos/angular/angular.js', 'angular-data'));
-	promises.push(setDataHTML('https://api.github.com/repos/emberjs/ember.js', 'ember-data'));
+	promises.push(getDataHTML('https://api.github.com/repos/facebook/react', 'React-data'));
+	promises.push(getDataHTML('https://api.github.com/repos/angular/angular.js', 'Angular-data'));
+	promises.push(getDataHTML('https://api.github.com/repos/emberjs/ember.js', 'Ember-data'));
+	promises.push(getDataHTML('https://api.github.com/repos/vuejs/vue', 'Vue-data'));
 	Promise.all(promises);
+
+	setInterval(function() {
+		let promises = [];
+		promises.push(getDataHTML('https://api.github.com/repos/facebook/react', 'React-data'));
+		promises.push(getDataHTML('https://api.github.com/repos/angular/angular.js', 'Angular-data'));
+		promises.push(getDataHTML('https://api.github.com/repos/emberjs/ember.js', 'Ember-data'));
+		promises.push(getDataHTML('https://api.github.com/repos/vuejs/vue', 'Vue-data'));
+		return Promise.all(promises);
+	}, 5000)
 </script>
 
 </html>
