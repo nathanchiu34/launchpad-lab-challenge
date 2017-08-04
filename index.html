@@ -1,11 +1,44 @@
 <h1>Hello</h1>
 <p id='date'> The time is </p>
+<p id='react-data'> React has </p>
+<p id='angular-data'> Angular has </p>
+<p id='ember-data'> Ember has </p>
+
 
 <script>
+	function getWatchers(data) {
+		return data.watchers;
+	}
+
 	var now = new Date();
 	document.getElementById('date').innerHTML += now;
 
-	fetch('https://google.com').then((resp) => {
-		console.log(resp.json);
-	});
+	let headers = new Headers();
+
+	let promises = [];
+	promises.push(
+		fetch('https://api.github.com/repos/facebook/react').then((resp) => {
+			return resp.json();
+		}).then((data) => {
+			document.getElementById('react-data').innerHTML += data.watchers + ' followers';
+		})
+	);
+
+	promises.push(
+		fetch('https://api.github.com/repos/angular/angular.js').then((resp) => {
+			return resp.json();
+		}).then((data) => {
+			document.getElementById('angular-data').innerHTML += data.watchers + ' followers';
+		})
+	);
+
+	promises.push(
+		fetch('https://api.github.com/repos/emberjs/ember.js').then((resp) => {
+			return resp.json();
+		}).then((data) => {
+			document.getElementById('ember-data').innerHTML += data.watchers + ' followers';
+		})
+	);
+
+	Promise.all(promises);
 </script>
