@@ -1,1 +1,11 @@
 <h1>Hello</h1>
+<p id='date'> The time is </p>
+
+<script>
+	var now = new Date();
+	document.getElementById('date').innerHTML += now;
+
+	fetch('https://google.com').then((resp) => {
+		console.log(resp.json);
+	});
+</script>
