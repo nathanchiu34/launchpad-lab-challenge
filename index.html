@@ -12,15 +12,30 @@
 
 <div class="container">
 	<h1>Client-Side JS Libraries</h1>
-	<p id='date'> The time is </p>
-	<h2> React.js </h2>
-	<p id='React-data'></p>
-	<h2> Angular.js </h2>
-	<p id='Angular-data'></p>
-	<h2> Ember.js </h2>
-	<p id='Ember-data'></p>
-	<h2> Vue.js </h2>
-	<p id='Vue-data'></p>
+	<p id='date'></p>
+	<table class='table table-bordered'>
+		<thead>
+			<th>Library</th>
+			<th>Followers</th> 
+			<th>Open Issues</th>
+			<th>Network Count</th>
+		</thead>
+		<tbody>
+			<tr id='React-data'>	
+				<th scope='row'> React.js </th>
+			</tr>
+			<tr id='Angular-data'>
+				<th scope='row'> Angular.js </th>
+			</tr>
+			<tr id='Ember-data'>
+				<th scope='row'> Ember.js </th>
+			</tr>
+			<tr id='Vue-data'>
+				<th scope='row'> Vue.js </th>
+			</tr>
+		</tbody>
+	</table>
+	<p id='error' style='color:red'></p>
 </div>
 
 <script>
@@ -29,24 +44,29 @@
 			return resp.json();
 		}).then((data) => {
 			elementTitle = elementId.split('-')[0]
-			document.getElementById(elementId).innerHTML = elementTitle + ' stats: </br>';
-			document.getElementById(elementId).innerHTML += data.watchers.toLocaleString() + ' followers' + '<br/>';
-			document.getElementById(elementId).innerHTML += data.open_issues.toLocaleString() + ' issues' + '<br/>';
-			document.getElementById(elementId).innerHTML += 'Network count: ' + data.network_count.toLocaleString() + '<br/>';
+			document.getElementById(elementId).innerHTML = '<th scope="row">' + elementTitle + '.js</th>';
+			document.getElementById(elementId).innerHTML += '<td>' + data.watchers.toLocaleString() + '</td>';
+			document.getElementById(elementId).innerHTML += '<td>' + data.open_issues.toLocaleString() + '</td>';
+			document.getElementById(elementId).innerHTML += '<td>' + data.network_count.toLocaleString() + '</td>';
 		});
 	};
 
 	var now = new Date();
-	document.getElementById('date').innerHTML += now;
+	document.getElementById('date').innerHTML += 'Last Updated: ' + now;
 
 	let promises = [];
 	promises.push(getDataHTML('https://api.github.com/repos/facebook/react', 'React-data'));
 	promises.push(getDataHTML('https://api.github.com/repos/angular/angular.js', 'Angular-data'));
 	promises.push(getDataHTML('https://api.github.com/repos/emberjs/ember.js', 'Ember-data'));
 	promises.push(getDataHTML('https://api.github.com/repos/vuejs/vue', 'Vue-data'));
-	Promise.all(promises);
+	Promise.all(promises).catch((err) => {
+		console.log(err);
+		document.getElementById('error').innerHTML = err;
+	});
 
 	setInterval(function() {
+		var now = new Date();
+		document.getElementById('date').innerHTML = 'Last Updated: ' + now;
 		let promises = [];
 		promises.push(getDataHTML('https://api.github.com/repos/facebook/react', 'React-data'));
 		promises.push(getDataHTML('https://api.github.com/repos/angular/angular.js', 'Angular-data'));
