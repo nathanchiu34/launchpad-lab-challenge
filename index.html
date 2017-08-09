@@ -18,7 +18,7 @@
 			<th>Library</th>
 			<th>Followers</th> 
 			<th>Open Issues</th>
-			<th>Network Count</th>
+			<th>Forks</th>
 		</thead>
 		<tbody>
 			<tr id='React-data'>	
@@ -47,7 +47,7 @@
 			document.getElementById(elementId).innerHTML = '<th scope="row">' + elementTitle + '.js</th>';
 			document.getElementById(elementId).innerHTML += '<td>' + data.watchers.toLocaleString() + '</td>';
 			document.getElementById(elementId).innerHTML += '<td>' + data.open_issues.toLocaleString() + '</td>';
-			document.getElementById(elementId).innerHTML += '<td>' + data.network_count.toLocaleString() + '</td>';
+			document.getElementById(elementId).innerHTML += '<td>' + data.forks.toLocaleString() + '</td>';
 		});
 	};
 
