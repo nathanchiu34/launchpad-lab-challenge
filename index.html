@@ -100,7 +100,7 @@
 
 	function setMainPage() {
 		var now = new Date();
-		document.getElementById('date').innerHTML += 'Last Updated: ' + now;
+		document.getElementById('date').innerHTML = 'Last Updated: ' + now;
 
 		let promises = [];
 		promises.push(getDataHTML('https://api.github.com/repos/facebook/react', 'React-data'));
@@ -113,9 +113,9 @@
 				let mostWatchedName = getNameOfMax(data, 'watchers');
 				let highStabilityName = getNameOfMin(data, 'open_issues_percentage');
 				let mostActiveName = getNameOfMax(data, 'forks');
-				document.getElementById('mostWatched').innerHTML += mostWatchedName + getLogoImg(mostWatchedName);
-				document.getElementById('highStability').innerHTML += highStabilityName + getLogoImg(highStabilityName);	
-				document.getElementById('mostActive').innerHTML += mostActiveName + getLogoImg(mostActiveName);	
+				document.getElementById('mostWatched').innerHTML = mostWatchedName + getLogoImg(mostWatchedName);
+				document.getElementById('highStability').innerHTML = highStabilityName + getLogoImg(highStabilityName);	
+				document.getElementById('mostActive').innerHTML = mostActiveName + getLogoImg(mostActiveName);	
 			})
 			.catch((err) => {
 				console.log(err);
@@ -123,7 +123,8 @@
 			});
 	}
 
-	setInterval(setMainPage(), 5000)
+	setMainPage();
+	setInterval(setMainPage, 5000);
 </script>
 
 </html>
