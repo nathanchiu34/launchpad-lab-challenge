@@ -1,7 +1,6 @@
 /**
  * Index.html uses this script to generate content.
  **/
-
 function getLogoImg(framework) {
 	const imgMap = {
 		React: '<img src="static/img/react-logo.png" class="img-rounded" alt="React Logo" width="120" height="100">',	
@@ -57,8 +56,8 @@ function getNameOfMin(objects, criteria, findLeast) {
 }
 
 function setMainPage() {
-	var now = new Date();
-	document.getElementById('date').innerHTML = 'Last Updated: ' + now;
+	let now = new Date();
+	document.getElementById('date').innerHTML = 'Last Updated: ' + now.toLocaleString();
 
 	let promises = [];
 	promises.push(getDataHTML('https://api.github.com/repos/facebook/react', 'React-data'));
