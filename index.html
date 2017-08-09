@@ -87,36 +87,29 @@
 		return name
 	}
 
-	var now = new Date();
-	document.getElementById('date').innerHTML += 'Last Updated: ' + now;
-
-	let promises = [];
-	promises.push(getDataHTML('https://api.github.com/repos/facebook/react', 'React-data'));
-	promises.push(getDataHTML('https://api.github.com/repos/angular/angular.js', 'Angular-data'));
-	promises.push(getDataHTML('https://api.github.com/repos/emberjs/ember.js', 'Ember-data'));
-	promises.push(getDataHTML('https://api.github.com/repos/vuejs/vue', 'Vue-data'));
-	Promise.all(promises)
-		.then((data) => {
-			// Get most watched.
-			document.getElementById('mostWatched').innerHTML += getNameOfMax(data, 'watchers');
-			document.getElementById('highStability').innerHTML += getNameOfMin	(data, 'open_issues_percentage');	
-			document.getElementById('mostActive').innerHTML += getNameOfMax(data, 'forks');	
-		})
-		.catch((err) => {
-			console.log(err);
-			document.getElementById('error').innerHTML = err;
-		});
-
-	setInterval(function() {
+	function setMainPage() {
 		var now = new Date();
-		document.getElementById('date').innerHTML = 'Last Updated: ' + now;
+		document.getElementById('date').innerHTML += 'Last Updated: ' + now;
+
 		let promises = [];
 		promises.push(getDataHTML('https://api.github.com/repos/facebook/react', 'React-data'));
 		promises.push(getDataHTML('https://api.github.com/repos/angular/angular.js', 'Angular-data'));
 		promises.push(getDataHTML('https://api.github.com/repos/emberjs/ember.js', 'Ember-data'));
 		promises.push(getDataHTML('https://api.github.com/repos/vuejs/vue', 'Vue-data'));
-		return Promise.all(promises);
-	}, 5000)
+		Promise.all(promises)
+			.then((data) => {
+				// Get most watched.
+				document.getElementById('mostWatched').innerHTML += getNameOfMax(data, 'watchers');
+				document.getElementById('highStability').innerHTML += getNameOfMin	(data, 'open_issues_percentage');	
+				document.getElementById('mostActive').innerHTML += getNameOfMax(data, 'forks');	
+			})
+			.catch((err) => {
+				console.log(err);
+				document.getElementById('error').innerHTML = err;
+			});
+	}
+
+	setInterval(setMainPage(), 5000)
 </script>
 
 </html>
