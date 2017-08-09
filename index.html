@@ -7,7 +7,6 @@
 	<title>LaunchPad Challenge</title>
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
 <div class="container">
@@ -35,6 +34,11 @@
 			</tr>
 		</tbody>
 	</table>
+	<div>
+	   <p id='mostWatched'><b>Most Watched, high visibility: </b></p>
+	   <p id='highStability'><b>Least Issues, high stability: </b></p>
+	   <p id='mostActive'><b>Most Active Development, high potential: </b></p>
+	</div>
 	<p id='error' style='color:red'></p>
 </div>
 
@@ -48,8 +52,40 @@
 			document.getElementById(elementId).innerHTML += '<td>' + data.watchers.toLocaleString() + '</td>';
 			document.getElementById(elementId).innerHTML += '<td>' + data.open_issues.toLocaleString() + '</td>';
 			document.getElementById(elementId).innerHTML += '<td>' + data.forks.toLocaleString() + '</td>';
+			return {
+				data: {
+					name: elementTitle,
+					watchers: data.watchers,
+					open_issues_percentage: data.open_issues / data.watchers,
+					forks: data.forks,
+				}
+			}
 		});
 	};
+
+	function getNameOfMax(objects, criteria, findLeast) {
+		let max = 0;
+		let name = '';
+		for (let object of objects) {
+			if (object['data'][criteria] > max) {
+				name = object['data']['name']
+				max = object['data'][criteria]
+			}
+		}
+		return name
+	}
+
+	function getNameOfMin(objects, criteria, findLeast) {
+		let min = Number.MAX_SAFE_INTEGER;
+		let name = '';
+		for (let object of objects) {
+			if (object['data'][criteria] < min) {
+				name = object['data']['name']
+				min = object['data'][criteria]
+			}
+		}
+		return name
+	}
 
 	var now = new Date();
 	document.getElementById('date').innerHTML += 'Last Updated: ' + now;
@@ -59,10 +95,17 @@
 	promises.push(getDataHTML('https://api.github.com/repos/angular/angular.js', 'Angular-data'));
 	promises.push(getDataHTML('https://api.github.com/repos/emberjs/ember.js', 'Ember-data'));
 	promises.push(getDataHTML('https://api.github.com/repos/vuejs/vue', 'Vue-data'));
-	Promise.all(promises).catch((err) => {
-		console.log(err);
-		document.getElementById('error').innerHTML = err;
-	});
+	Promise.all(promises)
+		.then((data) => {
+			// Get most watched.
+			document.getElementById('mostWatched').innerHTML += getNameOfMax(data, 'watchers');
+			document.getElementById('highStability').innerHTML += getNameOfMin	(data, 'open_issues_percentage');	
+			document.getElementById('mostActive').innerHTML += getNameOfMax(data, 'forks');	
+		})
+		.catch((err) => {
+			console.log(err);
+			document.getElementById('error').innerHTML = err;
+		});
 
 	setInterval(function() {
 		var now = new Date();
