@@ -30,15 +30,15 @@
 				<th scope='row'> Ember.js </th>
 			</tr>
 			<tr id='Vue-data'>
-				<th scope='row'> Vue.js <img src="static/img/vue-logo.png" class="img-rounded" alt="Vue Logo" width="304" height="236"></th>
+				<th scope='row'> Vue.js</th>
 			</tr>
 		</tbody>
 	</table>
 	<div>
 		<h3>Criterion</h3>
-		<p id='mostWatched'><b>Most Watched, High Visibility: </b></p>
-		<p id='highStability'><b>Least Issues, High Stability: </b></p>
-		<p id='mostActive'><b>Most Active Development, High Potential: </b></p>
+		<p id='mostWatched'></p>
+		<p id='highStability'></p>
+		<p id='mostActive'></p>
 	</div>
 	<p id='error' style='color:red'></p>
 </div>
@@ -113,9 +113,9 @@
 				let mostWatchedName = getNameOfMax(data, 'watchers');
 				let highStabilityName = getNameOfMin(data, 'open_issues_percentage');
 				let mostActiveName = getNameOfMax(data, 'forks');
-				document.getElementById('mostWatched').innerHTML = mostWatchedName + getLogoImg(mostWatchedName);
-				document.getElementById('highStability').innerHTML = highStabilityName + getLogoImg(highStabilityName);	
-				document.getElementById('mostActive').innerHTML = mostActiveName + getLogoImg(mostActiveName);	
+				document.getElementById('mostWatched').innerHTML = '<b>Most Watched, High Visibility: </b>' +mostWatchedName + getLogoImg(mostWatchedName);
+				document.getElementById('highStability').innerHTML = '<b>Least Issues, High Stability: </b>' +highStabilityName + getLogoImg(highStabilityName);	
+				document.getElementById('mostActive').innerHTML = '<b>Most Active Development, High Potential: </b>' +mostActiveName + getLogoImg(mostActiveName);	
 			})
 			.catch((err) => {
 				console.log(err);
