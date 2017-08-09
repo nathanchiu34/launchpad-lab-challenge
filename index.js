@@ -71,7 +71,7 @@ function setMainPage() {
 			let highStabilityName = getNameOfMin(data, 'open_issues_percentage');
 			let mostActiveName = getNameOfMax(data, 'forks');
 			document.getElementById('mostWatched').innerHTML = '<b>Most Watched, High Visibility: </b>' +mostWatchedName + getLogoImg(mostWatchedName);
-			document.getElementById('highStability').innerHTML = '<b>Least Issues, High Stability: </b>' +highStabilityName + getLogoImg(highStabilityName);	
+			document.getElementById('highStability').innerHTML = '<b>Least Issue Percentage (Open Issue to Follower ratio), High Stability: </b>' +highStabilityName + getLogoImg(highStabilityName);	
 			document.getElementById('mostActive').innerHTML = '<b>Most Active Development, High Potential: </b>' +mostActiveName + getLogoImg(mostActiveName);	
 		})
 		.catch((err) => {
