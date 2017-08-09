@@ -15,13 +15,13 @@
 	<table class='table table-bordered'>
 		<thead>
 			<th>Library</th>
-			<th>Followers</th> 
+			<th>Watchers</th> 
 			<th>Open Issues</th>
 			<th>Forks</th>
 		</thead>
 		<tbody>
-			<tr id='React-data'>	
-				<th scope='row'> React.js </th>
+			<tr id='React-data'>
+				<th scope='row'>React.js</th>
 			</tr>
 			<tr id='Angular-data'>
 				<th scope='row'> Angular.js </th>
@@ -30,25 +30,36 @@
 				<th scope='row'> Ember.js </th>
 			</tr>
 			<tr id='Vue-data'>
-				<th scope='row'> Vue.js </th>
+				<th scope='row'> Vue.js <img src="static/img/vue-logo.png" class="img-rounded" alt="Vue Logo" width="304" height="236"></th>
 			</tr>
 		</tbody>
 	</table>
 	<div>
-	   <p id='mostWatched'><b>Most Watched, high visibility: </b></p>
-	   <p id='highStability'><b>Least Issues, high stability: </b></p>
-	   <p id='mostActive'><b>Most Active Development, high potential: </b></p>
+		<h3>Criterion</h3>
+		<p id='mostWatched'><b>Most Watched, High Visibility: </b></p>
+		<p id='highStability'><b>Least Issues, High Stability: </b></p>
+		<p id='mostActive'><b>Most Active Development, High Potential: </b></p>
 	</div>
 	<p id='error' style='color:red'></p>
 </div>
 
 <script>
+	function getLogoImg(framework) {
+		const imgMap = {
+			React: '<img src="static/img/react-logo.png" class="img-rounded" alt="React Logo" width="120" height="100">',	
+			Vue: '<img src="static/img/vue-logo.png" class="img-rounded" alt="Vue Logo" width="120" height="100">',	
+			Angular: '<img src="static/img/angular-logo.png" class="img-rounded" alt="Angular Logo" width="120" height="100">',	
+			Ember: '<img src="static/img/ember-logo.png" class="img-rounded" alt="Ember Logo" width="120" height="100"',
+		};
+		return imgMap[framework];
+	}
+
 	function getDataHTML(url, elementId) {
 		return fetch(url).then((resp) => {
 			return resp.json();
 		}).then((data) => {
 			elementTitle = elementId.split('-')[0]
-			document.getElementById(elementId).innerHTML = '<th scope="row">' + elementTitle + '.js</th>';
+			document.getElementById(elementId).innerHTML = '<th scope="row">' + elementTitle + '.js' + getLogoImg(elementTitle) + '</th>';
 			document.getElementById(elementId).innerHTML += '<td>' + data.watchers.toLocaleString() + '</td>';
 			document.getElementById(elementId).innerHTML += '<td>' + data.open_issues.toLocaleString() + '</td>';
 			document.getElementById(elementId).innerHTML += '<td>' + data.forks.toLocaleString() + '</td>';
@@ -99,9 +110,12 @@
 		Promise.all(promises)
 			.then((data) => {
 				// Get most watched.
-				document.getElementById('mostWatched').innerHTML += getNameOfMax(data, 'watchers');
-				document.getElementById('highStability').innerHTML += getNameOfMin	(data, 'open_issues_percentage');	
-				document.getElementById('mostActive').innerHTML += getNameOfMax(data, 'forks');	
+				let mostWatchedName = getNameOfMax(data, 'watchers');
+				let highStabilityName = getNameOfMin(data, 'open_issues_percentage');
+				let mostActiveName = getNameOfMax(data, 'forks');
+				document.getElementById('mostWatched').innerHTML += mostWatchedName + getLogoImg(mostWatchedName);
+				document.getElementById('highStability').innerHTML += highStabilityName + getLogoImg(highStabilityName);	
+				document.getElementById('mostActive').innerHTML += mostActiveName + getLogoImg(mostActiveName);	
 			})
 			.catch((err) => {
 				console.log(err);
