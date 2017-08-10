@@ -2,15 +2,21 @@
  * Index.html uses this script to generate content.
  **/
 function getLogoImg(framework, height, width) {
-	height = height || 100;
-	width = width || 120;
+	height = height || 90;
+	width = width || 110;
+	let imgElement = document.createElement("img");
 	const imgMap = {
-		React: '<img src="static/img/react-logo.png" class="img-rounded" alt="React Logo" width="120" height="100"/>',	
-		Vue: '<img src="static/img/vue-logo.png" class="img-rounded" alt="Vue Logo" width="120" height="100"/>',	
-		Angular: '<img src="static/img/angular-logo.png" class="img-rounded" alt="Angular Logo" width="120" height="100"/>',	
-		Ember: '<img src="static/img/ember-logo.png" class="img-rounded" alt="Ember Logo" width="120" height="100"/>',
+		React: "static/img/react-logo.png",	
+		Vue: "static/img/vue-logo.png",	
+		Angular: "static/img/angular-logo.png",	
+		Ember: "static/img/ember-logo.png",
 	};
-	return imgMap[framework];
+	imgElement.setAttribute('src', imgMap[framework]);
+	imgElement.setAttribute('width', width);
+	imgElement.setAttribute('height', height);
+	imgElement.setAttribute('alt', 'JS-Logo');
+
+	return imgElement;
 }
 
 function getDataHTML(url, elementId) {
@@ -18,7 +24,8 @@ function getDataHTML(url, elementId) {
 		return resp.json();
 	}).then((data) => {
 		elementTitle = elementId.split('-')[0]
-		document.getElementById(elementId).innerHTML = '<th scope="row">' + elementTitle + '.js' + getLogoImg(elementTitle) + '</th>';
+		document.getElementById(elementId).innerHTML = '<th scope="row">' + elementTitle + '.js' + '</th>';
+		document.getElementById(elementId).appendChild(getLogoImg(elementTitle));
 		document.getElementById(elementId).innerHTML += '<td>' + data.watchers.toLocaleString() + '</td>';
 		document.getElementById(elementId).innerHTML += '<td>' + data.open_issues.toLocaleString() + '</td>';
 		document.getElementById(elementId).innerHTML += '<td>' + data.forks.toLocaleString() + '</td>';
@@ -110,12 +117,17 @@ function setMainPage() {
 			let mostWatchedName = getNameOfMax(data, 'watchers');
 			let highStabilityName = getNameOfMin(data, 'open_issues_percentage');
 			let mostActiveName = getNameOfMax(data, 'forks');
-			document.getElementById('mostWatched').innerHTML = '<b>Most Watched, High Visibility: </b>' +mostWatchedName + getLogoImg(mostWatchedName);
-			document.getElementById('highStability').innerHTML = '<b>Least Issue Percentage (Issue/Follower), High Stability: </b>' +highStabilityName + getLogoImg(highStabilityName);	
-			document.getElementById('mostActive').innerHTML = '<b>Most Active Development, High Potential: </b>' +mostActiveName + getLogoImg(mostActiveName);	
+			document.getElementById('mostWatched').innerHTML = '<b>Most Watched, High Visibility: </b>' + mostWatchedName;
+			document.getElementById('mostWatched').appendChild(getLogoImg(mostWatchedName, 50, 60));
+			document.getElementById('highStability').innerHTML = '<b>Least Issue Percentage (Issue/Follower), High Stability: </b>' + highStabilityName;
+			document.getElementById('highStability').appendChild(getLogoImg(highStabilityName, 50, 60));	
+			document.getElementById('mostActive').innerHTML = '<b>Most Active Development, High Potential: </b>' + mostActiveName; 
+			document.getElementById('mostActive').appendChild(getLogoImg(mostActiveName, 50, 60));	
 			let rankings = pickWinner(data);
-			document.getElementById('winner').innerHTML = '<b><span style="background-color: #FFFF00">Overall Winner:</span></b> ' + rankings[0].name + getLogoImg(rankings[0].name);
-			document.getElementById('runnerUp').innerHTML = '<b>Runner Up:</b> ' + rankings[1].name + getLogoImg(rankings[1].name);
+			document.getElementById('winner').innerHTML = '<b><span style="background-color: #FFFF00">Overall Winner:</span></b> ' + rankings[0].name;
+			document.getElementById('winner').appendChild(getLogoImg(rankings[0].name, 50, 60));
+			document.getElementById('runnerUp').innerHTML = '<b>Runner Up:</b> ' + rankings[1].name;
+			document.getElementById('runnerUp').appendChild(getLogoImg(rankings[1].name, 50, 60));
 		})
 		.catch((err) => {
 			console.log(err);
