@@ -111,10 +111,10 @@ function setMainPage() {
 			let highStabilityName = getNameOfMin(data, 'open_issues_percentage');
 			let mostActiveName = getNameOfMax(data, 'forks');
 			document.getElementById('mostWatched').innerHTML = '<b>Most Watched, High Visibility: </b>' +mostWatchedName + getLogoImg(mostWatchedName);
-			document.getElementById('highStability').innerHTML = '<b>Least Issue Percentage (Open Issue to Follower ratio), High Stability: </b>' +highStabilityName + getLogoImg(highStabilityName);	
+			document.getElementById('highStability').innerHTML = '<b>Least Issue Percentage (Issue/Follower), High Stability: </b>' +highStabilityName + getLogoImg(highStabilityName);	
 			document.getElementById('mostActive').innerHTML = '<b>Most Active Development, High Potential: </b>' +mostActiveName + getLogoImg(mostActiveName);	
 			let rankings = pickWinner(data);
-			document.getElementById('winner').innerHTML = '<b>Overall Winner:</b> ' + rankings[0].name + getLogoImg(rankings[0].name);
+			document.getElementById('winner').innerHTML = '<b><span style="background-color: #FFFF00">Overall Winner:</span></b> ' + rankings[0].name + getLogoImg(rankings[0].name);
 			document.getElementById('runnerUp').innerHTML = '<b>Runner Up:</b> ' + rankings[1].name + getLogoImg(rankings[1].name);
 		})
 		.catch((err) => {
