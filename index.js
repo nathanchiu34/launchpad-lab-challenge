@@ -1,6 +1,7 @@
 /**
- * Index.html uses this script to generate content.
+ * Index.html uses this script to grab data and generate content.
  **/
+
 function getLogoImg(framework, height, width) {
 	height = height || 90;
 	width = width || 110;
@@ -19,16 +20,21 @@ function getLogoImg(framework, height, width) {
 	return imgElement;
 }
 
-function getDataHTML(url, elementId) {
+function setTableRows(elementId, data) {
+	elementTitle = elementId.split('-')[0]
+	document.getElementById(elementId).innerHTML = '<th scope="row">' + elementTitle + '.js' + '</th>';
+	document.getElementById(elementId).appendChild(getLogoImg(elementTitle));
+	document.getElementById(elementId).innerHTML += '<td>' + data.watchers.toLocaleString() + '</td>';
+	document.getElementById(elementId).innerHTML += '<td>' + data.open_issues.toLocaleString() + '</td>';
+	document.getElementById(elementId).innerHTML += '<td>' + data.forks.toLocaleString() + '</td>';
+}
+
+function getDataForHTML(url, elementId) {
 	return fetch(url).then((resp) => {
 		return resp.json();
 	}).then((data) => {
 		elementTitle = elementId.split('-')[0]
-		document.getElementById(elementId).innerHTML = '<th scope="row">' + elementTitle + '.js' + '</th>';
-		document.getElementById(elementId).appendChild(getLogoImg(elementTitle));
-		document.getElementById(elementId).innerHTML += '<td>' + data.watchers.toLocaleString() + '</td>';
-		document.getElementById(elementId).innerHTML += '<td>' + data.open_issues.toLocaleString() + '</td>';
-		document.getElementById(elementId).innerHTML += '<td>' + data.forks.toLocaleString() + '</td>';
+		setTableRows(elementId, data)
 		return {
 			data: {
 				name: elementTitle,
@@ -64,10 +70,8 @@ function getNameOfMin(objects, criteria, findLeast) {
 	return name;
 }
 
-/**
- * Pick a framework after aggregating metrics
- * We average the ranking of each js library and returning the top.
- */
+// Pick a framework after aggregating metrics
+// We average the ranking of each js library and returning the top.
 function pickWinner(objects) {
 	// Make copies of Arrays.
 	let watcherRankings = objects.slice();
@@ -75,7 +79,7 @@ function pickWinner(objects) {
 	let activeRankings = objects.slice();
 
 	// Sort the arrays based on metrics.
-	watcherRankings.sort((a, b) => a.data.watchers - b.data.watchers );
+	watcherRankings.sort((a, b) => a.data.watchers - b.data.watchers);
 	stabilityRankings.sort((a, b) => b.data.open_issues_percentage - a.data.open_issues_percentage);
 	activeRankings.sort((a, b) => a.data.forks - b.data.forks);
 	
@@ -83,6 +87,7 @@ function pickWinner(objects) {
 	stabilityRankings = stabilityRankings.map((js) => js.data.name);
 	activeRankings = activeRankings.map((js) => js.data.name);
 
+	// Get the highest ranked js library based on ranking of metrics.
 	let rankings = [watcherRankings, stabilityRankings, activeRankings];
 	let reactRanking = {name: 'React', rank: rankingHelper('React', rankings)};
 	let angularRanking = {name: 'Angular', rank: rankingHelper('Angular', rankings)};
@@ -94,6 +99,7 @@ function pickWinner(objects) {
 	return aggregateRankings;
 }
 
+// Average the ascending rankings of js-libs, typically a higher score is better.
 function rankingHelper(name, arrays) {
 	let aggregateRanking = 0;
 	for (let array of arrays) {
@@ -108,31 +114,31 @@ function setMainPage() {
 	document.getElementById('date').innerHTML = 'Last Updated: ' + now.toLocaleString();
 
 	let promises = [];
-	promises.push(getDataHTML('https://api.github.com/repos/facebook/react', 'React-data'));
-	promises.push(getDataHTML('https://api.github.com/repos/angular/angular.js', 'Angular-data'));
-	promises.push(getDataHTML('https://api.github.com/repos/emberjs/ember.js', 'Ember-data'));
-	promises.push(getDataHTML('https://api.github.com/repos/vuejs/vue', 'Vue-data'));
-	Promise.all(promises)
-		.then((data) => {
-			let mostWatchedName = getNameOfMax(data, 'watchers');
-			let highStabilityName = getNameOfMin(data, 'open_issues_percentage');
-			let mostActiveName = getNameOfMax(data, 'forks');
-			document.getElementById('mostWatched').innerHTML = '<b>Most Watched, High Visibility: </b>' + mostWatchedName;
-			document.getElementById('mostWatched').appendChild(getLogoImg(mostWatchedName, 50, 60));
-			document.getElementById('highStability').innerHTML = '<b>Least Issue Percentage (Issue/Follower), High Stability: </b>' + highStabilityName;
-			document.getElementById('highStability').appendChild(getLogoImg(highStabilityName, 50, 60));	
-			document.getElementById('mostActive').innerHTML = '<b>Most Active Development, High Potential: </b>' + mostActiveName; 
-			document.getElementById('mostActive').appendChild(getLogoImg(mostActiveName, 50, 60));	
-			let rankings = pickWinner(data);
-			document.getElementById('winner').innerHTML = '<b><span style="background-color: #FFFF00">Overall Winner:</span></b> ' + rankings[0].name;
-			document.getElementById('winner').appendChild(getLogoImg(rankings[0].name, 50, 60));
-			document.getElementById('runnerUp').innerHTML = '<b>Runner Up:</b> ' + rankings[1].name;
-			document.getElementById('runnerUp').appendChild(getLogoImg(rankings[1].name, 50, 60));
-		})
-		.catch((err) => {
-			console.log(err);
-			document.getElementById('error').innerHTML = err;
-		});
+	promises.push(getDataForHTML('https://api.github.com/repos/facebook/react', 'React-data'));
+	promises.push(getDataForHTML('https://api.github.com/repos/angular/angular.js', 'Angular-data'));
+	promises.push(getDataForHTML('https://api.github.com/repos/emberjs/ember.js', 'Ember-data'));
+	promises.push(getDataForHTML('https://api.github.com/repos/vuejs/vue', 'Vue-data'));
+	Promise.all(promises).then((data) => {
+		let mostWatchedName = getNameOfMax(data, 'watchers');
+		let highStabilityName = getNameOfMin(data, 'open_issues_percentage');
+		let mostActiveName = getNameOfMax(data, 'forks');
+		const smallerWidth = 60;
+		const smallerHeight = 50;
+		document.getElementById('mostWatched').innerHTML = '<b>Most Watched, High Visibility: </b>' + mostWatchedName;
+		document.getElementById('mostWatched').appendChild(getLogoImg(mostWatchedName, smallerHeight, smallerWidth));
+		document.getElementById('highStability').innerHTML = '<b>Least Issue Percentage (Issue/Follower), High Stability: </b>' + highStabilityName;
+		document.getElementById('highStability').appendChild(getLogoImg(highStabilityName, smallerHeight, smallerWidth));	
+		document.getElementById('mostActive').innerHTML = '<b>Most Active Development, High Potential: </b>' + mostActiveName; 
+		document.getElementById('mostActive').appendChild(getLogoImg(mostActiveName, smallerHeight, smallerWidth));	
+		let rankings = pickWinner(data);
+		document.getElementById('winner').innerHTML = '<b><span style="background-color: #FFFF00">Overall Winner:</span></b> ' + rankings[0].name;
+		document.getElementById('winner').appendChild(getLogoImg(rankings[0].name, smallerHeight, smallerWidth));
+		document.getElementById('runnerUp').innerHTML = '<b>Runner Up:</b> ' + rankings[1].name;
+		document.getElementById('runnerUp').appendChild(getLogoImg(rankings[1].name, smallerHeight, smallerWidth));
+	}).catch((err) => {
+		console.log(err);
+		document.getElementById('error').innerHTML = err;
+	});
 }
 
 setMainPage();
